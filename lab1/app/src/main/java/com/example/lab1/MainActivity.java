@@ -12,6 +12,11 @@ import com.example.lab1.enums.BmiLevel;
 
 import java.text.NumberFormat;
 
+/**
+ * Prosta aplikacja kalkulator BMI - Pobiera od użytkownika wzrost (w centymetrach) oraz wagę (w kilogramach) i oblicza na ich podstawie wskaźnik BMI (Body Mass Index) oraz wyświetla informację o kategorii w zależności od zakresu w jakim znajduje się wynik BMI.
+ *
+ * @author Łukasz Soldatke (lsoldatke)
+ */
 public class MainActivity extends AppCompatActivity {
     private static final NumberFormat numberFormat =
             NumberFormat.getNumberInstance();
@@ -42,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         heightEditText.addTextChangedListener(heightEditTextWatcher);
     }
 
+    /**
+     * Oblicza wskaźnik BMI na podstawie wprowadzonych danych i wyświetla go w odpowiednim polu.
+     */
     private void calculateBMI() {
         double heightMeters = height / 100;
         double bmi = weight / (heightMeters * heightMeters);
@@ -50,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
         interpretBMI(bmi);
     }
 
+    /**
+     * Interpretuje wartość wskaźnika BMI - przypisuje odpowiednią kategorię i wyświetla ją w odpowiednim polu.
+     *
+     * @param bmi Wartość BMI
+     */
     private void interpretBMI(double bmi) {
         if (bmi < 18.5) {
             bmiLevelTextView.setText(BmiLevel.UNDERWEIGHT.toString());
@@ -62,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Reaguje na zmiany tekstu w polu tekstowym dla wagi. Konwertuje wprowadzany tekst na liczbę i wyświetla ją w odpowiednim formacie, a w przypadku błędu konwersji przywraca wartość wagi i pola jej odpowiadającego do wartości domyślnej.
+     */
     private final TextWatcher weightEditTextWatcher = new TextWatcher() {
         @Override
         public void onTextChanged(CharSequence s, int start,
@@ -87,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Reaguje na zmiany tekstu w polu tekstowym dla wzrostu. Konwertuje wprowadzany tekst na liczbę i wyświetla ją w odpowiednim formacie, a w przypadku błędu konwersji przywraca wartość wzrostu i pola jemu odpowiadającego do wartości domyślnej.
+     */
     private final TextWatcher heightEditTextWatcher = new TextWatcher() {
         @Override
         public void onTextChanged(CharSequence s, int start,
