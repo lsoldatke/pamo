@@ -35,17 +35,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        weightTextView = (TextView) findViewById(R.id.weightTextView);
-        heightTextView = (TextView) findViewById(R.id.heightTextView);
-        bmiTextView = (TextView) findViewById(R.id.bmiTextView);
-        bmiLevelTextView = (TextView) findViewById(R.id.bmiLevelTextView);
+        weightTextView = findViewById(R.id.weightTextView);
+        heightTextView = findViewById(R.id.heightTextView);
+        bmiTextView = findViewById(R.id.bmiTextView);
+        bmiLevelTextView = findViewById(R.id.bmiLevelTextView);
 
         EditText weightEditText =
-                (EditText) findViewById(R.id.weightEditText);
+                findViewById(R.id.weightEditText);
         weightEditText.addTextChangedListener(weightEditTextWatcher);
 
         EditText heightEditText =
-                (EditText) findViewById(R.id.heightEditText);
+                findViewById(R.id.heightEditText);
         heightEditText.addTextChangedListener(heightEditTextWatcher);
     }
 
