@@ -1,41 +1,27 @@
 package com.example.lab1;
 
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.TextWatcher;
-import android.view.View;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.lab1.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
+import com.example.lab1.enums.BmiLevel;
 
 import java.text.NumberFormat;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
-
     private static final NumberFormat numberFormat =
-            NumberFormat.getInstance();
+            NumberFormat.getNumberInstance();
 
-    private float weight = 0.0f;
-    private float height = 0.0f;
+    private double weight = 0.0;
+    private double height = 0.0;
     private TextView weightTextView;
     private TextView heightTextView;
     private TextView bmiTextView;
+    private TextView bmiLevelTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +31,7 @@ public class MainActivity extends AppCompatActivity {
         weightTextView = (TextView) findViewById(R.id.weightTextView);
         heightTextView = (TextView) findViewById(R.id.heightTextView);
         bmiTextView = (TextView) findViewById(R.id.bmiTextView);
-
-        weightTextView.setText(numberFormat.format(0));
-        heightTextView.setText(numberFormat.format(0));
-        bmiTextView.setText(numberFormat.format(0));
+        bmiLevelTextView = (TextView) findViewById(R.id.bmiLevelTextView);
 
         EditText weightEditText =
                 (EditText) findViewById(R.id.weightEditText);
@@ -59,89 +42,73 @@ public class MainActivity extends AppCompatActivity {
         heightEditText.addTextChangedListener(heightEditTextWatcher);
     }
 
-    private void calculate() {
-        float bmi = weight / (height * height);
+    private void calculateBMI() {
+        double heightMeters = height / 100;
+        double bmi = weight / (heightMeters * heightMeters);
 
         bmiTextView.setText(numberFormat.format(bmi));
+        interpretBMI(bmi);
+    }
+
+    private void interpretBMI(double bmi) {
+        if (bmi < 18.5) {
+            bmiLevelTextView.setText(BmiLevel.UNDERWEIGHT.toString());
+        } else if (bmi >= 18.5 && bmi < 25) {
+            bmiLevelTextView.setText(BmiLevel.NORMAL.toString());
+        } else if (bmi >= 25 && bmi < 30) {
+            bmiLevelTextView.setText(BmiLevel.OVERWEIGHT.toString());
+        } else {
+            bmiLevelTextView.setText(BmiLevel.OBESITY.toString());
+        }
     }
 
     private final TextWatcher weightEditTextWatcher = new TextWatcher() {
         @Override
         public void onTextChanged(CharSequence s, int start,
                                   int before, int count) {
-
             try {
-                weight = Float.parseFloat(s.toString()) / 100.0f;
+                weight = Double.parseDouble(s.toString());
                 weightTextView.setText(numberFormat.format(weight));
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
+                weight = 0.0;
                 weightTextView.setText("");
-                weight = 0.0f;
             }
 
-            calculate();
+            calculateBMI();
         }
 
-    private final TextWatcher weightEditTextWatcher = new TextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+
+        @Override
+        public void beforeTextChanged(
+                CharSequence s, int start, int count, int after) {
+        }
+    };
+
+    private final TextWatcher heightEditTextWatcher = new TextWatcher() {
         @Override
         public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-
+                                  int before, int count) {
             try {
-                weight = Float.parseFloat(s.toString()) / 100.0f;
-                weightTextView.setText(numberFormat.format(weight));
-            }
-            catch (NumberFormatException e) {
-                weightTextView.setText("");
-                weight = 0.0f;
+                height = Double.parseDouble(s.toString());
+                heightTextView.setText(numberFormat.format(height));
+            } catch (NumberFormatException e) {
+                height = 0.0;
+                heightTextView.setText("");
             }
 
-            calculate();
+            calculateBMI();
         }
 
-        private final TextWatcher weightEditTextWatcher = new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-
-                try {
-                    weight = Float.parseFloat(s.toString()) / 100.0f;
-                    weightTextView.setText(numberFormat.format(weight));
-                }
-                catch (NumberFormatException e) {
-                    weightTextView.setText("");
-                    weight = 0.0f;
-                }
-
-                calculate();
-            }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        @Override
+        public void afterTextChanged(Editable s) {
         }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
+        @Override
+        public void beforeTextChanged(
+                CharSequence s, int start, int count, int after) {
+        }
+    };
 }
