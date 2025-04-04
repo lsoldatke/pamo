@@ -1,20 +1,22 @@
 package com.example.lab2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lab2.enums.BmiLevel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.NumberFormat;
 
 /**
- * Prosta aplikacja kalkulator BMI - Pobiera od użytkownika wzrost (w centymetrach) oraz wagę
+ * Prosty kalkulator BMI - Pobiera od użytkownika wzrost (w centymetrach) oraz wagę
  * (w kilogramach) i oblicza na ich podstawie wskaźnik BMI (Body Mass Index) oraz wyświetla
  * informację o kategorii w zależności od zakresu w jakim znajduje się wynik BMI.
  *
@@ -23,25 +25,33 @@ import java.text.NumberFormat;
 public class BmiCalculatorActivity extends AppCompatActivity {
     private static final NumberFormat numberFormat =
             NumberFormat.getNumberInstance();
+    private Button changeCalculatorButton;
 
-    private double weight = 0.0;
-    private double height = 0.0;
+    private double weight = 0.0; // Waga (w kg)
+    private int height = 0; // Wzrost (w cm)
     private TextView weightTextView;
     private TextView heightTextView;
     private TextView bmiTextView;
     private TextView bmiLevelTextView;
-    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bmi_calculator);
 
+        changeCalculatorButton = findViewById(R.id.changeCalculatorButton);
         weightTextView = findViewById(R.id.weightTextView);
         heightTextView = findViewById(R.id.heightTextView);
         bmiTextView = findViewById(R.id.bmiTextView);
         bmiLevelTextView = findViewById(R.id.bmiLevelTextView);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        changeCalculatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BmiCalculatorActivity.this, CaloricDemandCalculatorActivity.class);
+                startActivity(intent);
+            }
+        });
 
         EditText weightEditText =
                 findViewById(R.id.weightEditText);
@@ -56,7 +66,7 @@ public class BmiCalculatorActivity extends AppCompatActivity {
      * Oblicza wskaźnik BMI na podstawie wprowadzonych danych i wyświetla go w odpowiednim polu.
      */
     private void calculateBMI() {
-        double heightMeters = height / 100;
+        double heightMeters = (double) height / 100;
         double bmi = weight / (heightMeters * heightMeters);
 
         bmiTextView.setText(numberFormat.format(bmi));
@@ -121,10 +131,10 @@ public class BmiCalculatorActivity extends AppCompatActivity {
         public void onTextChanged(CharSequence s, int start,
                                   int before, int count) {
             try {
-                height = Double.parseDouble(s.toString());
+                height = Integer.parseInt(s.toString());
                 heightTextView.setText(numberFormat.format(height));
             } catch (NumberFormatException e) {
-                height = 0.0;
+                height = 0;
                 heightTextView.setText("");
             }
 

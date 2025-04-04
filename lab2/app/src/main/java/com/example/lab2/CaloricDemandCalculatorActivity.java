@@ -1,11 +1,13 @@
 package com.example.lab2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -20,8 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Prosty kalkulator zapotrzebowania kalorycznego - Pobiera od użytkownika wiek, wzrost (w centymetrach), wagę
- * (w kilogramach) oraz poziom aktywności fizycznej i oblicza na ich podstawie zapotrzebowanie kaloryczne według wzoru Benedicta-Harrisa.
+ * Prosty kalkulator zapotrzebowania kalorycznego - Pobiera od użytkownika wiek, wzrost
+ * (w centymetrach), wagę (w kilogramach), poziom aktywności fizycznej oraz płeć i oblicza na ich
+ * podstawie zapotrzebowanie kaloryczne według wzoru Benedicta-Harrisa.
  *
  * @author Łukasz Soldatke (lsoldatke)
  */
@@ -32,6 +35,7 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
     private double physicalActivityIndex = 1.6; // Współczynnik aktywności fizycznej - domyślnie 1.6 dla średniej aktywności
     private double ppm = 0.0; // Podstawowa przemiana materii
     private double cpm = 0.0; // Całkowita przemiana materii (z uwzględnieniem poziomu aktywności fizycznej)
+    private Button changeCalculatorButton;
     private int age;
     private double weight = 0.0; // Waga (w kg)
     private int height = 0; // Wzrost (w cm)
@@ -50,6 +54,7 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caloric_demand_calculator);
 
+        changeCalculatorButton = findViewById(R.id.changeCalculatorButton);
         ageTextView = findViewById(R.id.ageTextView);
         weightTextView = findViewById(R.id.weightTextView);
         heightTextView = findViewById(R.id.heightTextView);
@@ -57,6 +62,14 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
         genderSpinner = findViewById(R.id.genderSpinner);
         caloriesTextView = findViewById(R.id.caloriesTextView);
         recipesTextView = findViewById(R.id.recipesTextView);
+
+        changeCalculatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CaloricDemandCalculatorActivity.this, BmiCalculatorActivity.class);
+                startActivity(intent);
+            }
+        });
 
         EditText ageEditText =
                 findViewById(R.id.ageEditText);
@@ -106,7 +119,8 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
     }
 
     /**
-     * Oblicza dzienne zapotrzebowanie kaloryczne na podstawie wprowadzonych danych i wyświetla je w odpowiednim polu.
+     * Oblicza dzienne zapotrzebowanie kaloryczne na podstawie wprowadzonych danych z użyciem wzoru
+     * Benedicta-Harrisa i wyświetla je w odpowiednim polu.
      */
     private void calculateCaloricDemand() {
         switch (gender) {

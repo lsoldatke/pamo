@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         foodImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CaloricDemandCalculatorActivity.class);
+                Intent intent = new Intent(MainActivity.this, BmiCalculatorActivity.class);
                 startActivity(intent);
             }
         });
