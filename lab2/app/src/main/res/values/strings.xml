@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BMI and calories calculator</string>
+    <string name="enter_age">Enter age</string>
+    <string name="enter_weight">Enter weight (KG)</string>
+    <string name="enter_height">Enter height (CM)</string>
+    <string name="gender">Gender</string>
+    <string name="physical_activity_level">Physical activity level</string>
+    <string name="bmi_result">BMI</string>
+    <string name="bmi_level">Level</string>
+    <string name="calories_result">Calories</string>
+</resources>

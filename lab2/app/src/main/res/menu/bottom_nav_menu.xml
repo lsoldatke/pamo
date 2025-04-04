@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_bmi"
+        android:icon="@drawable/baseline_accessibility_24"
+        android:title="BMI" />
+    <item
+        android:id="@+id/nav_calories"
+        android:icon="@drawable/baseline_assessment_24"
+        android:title="Calories" />
+</menu>
