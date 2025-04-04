@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lab2.enums.Gender;
 import com.example.lab2.enums.PhysicalActivityLevel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -30,16 +29,21 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
     private static final NumberFormat numberFormat =
             NumberFormat.getNumberInstance();
 
+    private double physicalActivityIndex = 1.6; // Współczynnik aktywności fizycznej - domyślnie 1.6 dla średniej aktywności
+    private double ppm = 0.0; // Podstawowa przemiana materii
+    private double cpm = 0.0; // Całkowita przemiana materii (z uwzględnieniem poziomu aktywności fizycznej)
     private int age;
-    private double weight = 0.0;
-    private double height = 0.0;
+    private double weight = 0.0; // Waga (w kg)
+    private int height = 0; // Wzrost (w cm)
     private PhysicalActivityLevel physicalActivityLevel = PhysicalActivityLevel.MODERATE;
-    private Gender gender;
+    private Gender gender = Gender.MALE;
     private TextView ageTextView;
     private TextView weightTextView;
     private TextView heightTextView;
+    Spinner physicalActivityLevelSpinner;
+    Spinner genderSpinner;
     private TextView caloriesTextView;
-    private BottomNavigationView bottomNavigationView;
+    private TextView recipesTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +53,10 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
         ageTextView = findViewById(R.id.ageTextView);
         weightTextView = findViewById(R.id.weightTextView);
         heightTextView = findViewById(R.id.heightTextView);
+        physicalActivityLevelSpinner = findViewById(R.id.physicalActivityLevelSpinner);
+        genderSpinner = findViewById(R.id.genderSpinner);
         caloriesTextView = findViewById(R.id.caloriesTextView);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        recipesTextView = findViewById(R.id.recipesTextView);
 
         EditText ageEditText =
                 findViewById(R.id.ageEditText);
@@ -64,8 +70,6 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
                 findViewById(R.id.heightEditText);
         heightEditText.addTextChangedListener(heightEditTextWatcher);
 
-        Spinner physicalActivityLevelSpinner = findViewById(R.id.physicalActivityLevelSpinner);
-
         List<PhysicalActivityLevel> physicalActivityLevels = Arrays.asList(PhysicalActivityLevel.values());
         ArrayAdapter<PhysicalActivityLevel> adapterPhysicalActivityLevel = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, physicalActivityLevels);
         physicalActivityLevelSpinner.setAdapter(adapterPhysicalActivityLevel);
@@ -74,6 +78,7 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 physicalActivityLevel = PhysicalActivityLevel.values()[i];
                 calculateCaloricDemand();
+                suggestRecipes(cpm);
             }
 
             @Override
@@ -81,8 +86,6 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
 
             }
         });
-
-        Spinner genderSpinner = findViewById(R.id.genderSpinner);
 
         List<Gender> genders = Arrays.asList(Gender.values());
         ArrayAdapter<Gender> adapterGender = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genders);
@@ -92,6 +95,7 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 gender = Gender.values()[i];
                 calculateCaloricDemand();
+                suggestRecipes(cpm);
             }
 
             @Override
@@ -102,13 +106,17 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
     }
 
     /**
-     * Oblicza zapotrzebowanie kaloryczne na podstawie wprowadzonych danych i wyświetla je w odpowiednim polu.
+     * Oblicza dzienne zapotrzebowanie kaloryczne na podstawie wprowadzonych danych i wyświetla je w odpowiednim polu.
      */
     private void calculateCaloricDemand() {
-        double heightMeters = height / 100;
-        double physicalActivityIndex = 1.6;
-        double ppm = 0.0;
-        double cpm = 0.0;
+        switch (gender) {
+            case MALE:
+                ppm = 66.473 + (13.752 * weight) + (5.003 * height) - (6.775 * age);
+                break;
+            case FEMALE:
+                ppm = 655.1 + (9.563 * weight) + (1.85 * height) - (4.676 * age);
+                break;
+        }
 
         switch (physicalActivityLevel) {
             case LACK_OF_ACTIVITY:
@@ -131,15 +139,35 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
                 break;
         }
 
-        if (gender == Gender.FEMALE) {
-            ppm = 655.1 + (9.563 * weight) + (1.85 * heightMeters) - (4.676 * age);
+        cpm = ppm * physicalActivityIndex;
+        caloriesTextView.setText(numberFormat.format(cpm));
+    }
+
+    /**
+     * Proponuje dwa przepisy - potrawę na śniadanie i obiad w zależności od obliczonego
+     * zapotrzebowania kalorycznego.
+     *
+     * @param cpm Obliczona wartość całkowitej przemiany materii
+     */
+    private void suggestRecipes(double cpm) {
+        String breakfastRecipe;
+        String lunchRecipe;
+
+        if (cpm < 1800) {
+            breakfastRecipe = getString(R.string.breakfast_omelette);
+            lunchRecipe = getString(R.string.lunch_salad);
+        } else if (cpm <= 2200) {
+            breakfastRecipe = getString(R.string.breakfast_oatmeal);
+            lunchRecipe = getString(R.string.lunch_chicken_rice);
         } else {
-            ppm = 66.473 + (13.752 * weight) + (5.003 * heightMeters) - (6.775 * age);
+            breakfastRecipe = getString(R.string.breakfast_scrambled_eggs);
+            lunchRecipe = getString(R.string.lunch_pasta_salmon);
         }
 
-        cpm = ppm * physicalActivityIndex;
-        caloriesTextView.setText(numberFormat.format(ppm));
+        String suggestedRecipes = "Breakfast:\n" + breakfastRecipe + "\n\nLunch:\n" + lunchRecipe;
+        recipesTextView.setText(suggestedRecipes);
     }
+
 
     /**
      * Reaguje na zmiany tekstu w polu tekstowym dla wieku. Konwertuje wprowadzany tekst na liczbę i
@@ -159,6 +187,7 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
             }
 
             calculateCaloricDemand();
+            suggestRecipes(cpm);
         }
 
         @Override
@@ -189,6 +218,7 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
             }
 
             calculateCaloricDemand();
+            suggestRecipes(cpm);
         }
 
         @Override
@@ -211,14 +241,15 @@ public class CaloricDemandCalculatorActivity extends AppCompatActivity {
         public void onTextChanged(CharSequence s, int start,
                                   int before, int count) {
             try {
-                height = Double.parseDouble(s.toString());
+                height = Integer.parseInt(s.toString());
                 heightTextView.setText(numberFormat.format(height));
             } catch (NumberFormatException e) {
-                height = 0.0;
+                height = 0;
                 heightTextView.setText("");
             }
 
             calculateCaloricDemand();
+            suggestRecipes(cpm);
         }
 
         @Override

@@ -1,11 +1,24 @@
 <resources>
     <string name="app_name">BMI and calories calculator</string>
+
+    <string name="bmi_calc_title">BMI calculator</string>
+    <string name="calories_calc_title">Calories calculator</string>
     <string name="enter_age">Enter age</string>
-    <string name="enter_weight">Enter weight (KG)</string>
-    <string name="enter_height">Enter height (CM)</string>
+    <string name="enter_weight">Enter weight (in KG)</string>
+    <string name="enter_height">Enter height (in CM)</string>
     <string name="gender">Gender</string>
     <string name="physical_activity_level">Physical activity level</string>
     <string name="bmi_result">BMI</string>
     <string name="bmi_level">Level</string>
     <string name="calories_result">Calories</string>
+    <string name="suggested_recipes">Suggested recipes</string>
+    <string name="change_calculator">BMI / Calories</string>
+
+    <!-- Recipes -->
+    <string name="breakfast_omelette">Omelet with Vegetables (~400 kcal)\n\nIngredients:\n- 2 eggs\n- 30 ml 2% milk\n- ½ bell pepper\n- 50 g spinach\n- 1 teaspoon olive oil\n- 20 g feta cheese\n\nPreparation:\n1. Whisk the eggs with milk, salt, and pepper.\n2. Sauté the bell pepper and spinach in olive oil.\n3. Pour in the egg mixture and cook on low heat.\n4. Add feta, fold in half, and cook for a bit longer.</string>
+    <string name="breakfast_oatmeal">Oatmeal with Banana (~500 kcal)\n\nIngredients:\n- 50 g rolled oats\n- 200 ml 2% milk\n- 1 banana\n- 1 teaspoon honey\n\nPreparation:\n1. Cook the oats in milk.\n2. Add sliced banana and honey.\n3. Mix well and serve.</string>
+    <string name="breakfast_scrambled_eggs">Scrambled Eggs with Avocado (~600 kcal)\n\nIngredients:\n- 3 eggs\n- ½ avocado\n- 1 teaspoon olive oil\n- Salt, pepper\n\nPreparation:\n1. Whisk the eggs.\n2. Cook in olive oil, then add sliced avocado.\n3. Season and serve.</string>
+    <string name="lunch_salad">Chicken Salad (~500 kcal)\n\nIngredients:\n- 100 g chicken breast\n- ½ avocado\n- 50 g tomato\n- 50 g cucumber\n- 1 teaspoon olive oil\n- 30 g mozzarella cheese\n- Mixed greens\n\nPreparation:\n1. Grill the chicken and slice it into strips.\n2. Dice the vegetables.\n3. Mix all ingredients with olive oil and lemon juice.</string>
+    <string name="lunch_chicken_rice">Chicken with Rice (~700 kcal)\n\nIngredients:\n- 150 g chicken breast\n- 100 g rice\n- 100 g broccoli\n- 50 g carrot\n- 1 teaspoon olive oil\n\nPreparation:\n1. Cook the rice.\n2. Sauté the chicken in olive oil.\n3. Add the vegetables and cook for a few minutes.\n4. Serve with rice.</string>
+    <string name="lunch_pasta_salmon">Pasta with Salmon (~800 kcal)\n\nIngredients:\n- 100 g whole wheat pasta\n- 100 g salmon\n- 50 ml 18% cream\n- 1 teaspoon olive oil\n- Salt, pepper\n\nPreparation:\n1. Cook the pasta.\n2. Sauté the salmon in olive oil.\n3. Add the cream and season to taste.\n4. Mix with the pasta.</string>
 </resources>
